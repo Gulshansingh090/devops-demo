@@ -3,6 +3,8 @@ package edu.ppsu.devops;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
+import main.java.edu.ppsu.devops.Calculator;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -13,16 +15,13 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class App {
 
-    static final String VERSION =
-            System.getenv().getOrDefault("APP_VERSION", "1.0");
+    static final String VERSION = System.getenv().getOrDefault("APP_VERSION", "1.0");
 
-    static final Map<String, AtomicLong> REQUESTS =
-            new ConcurrentHashMap<>();
+    static final Map<String, AtomicLong> REQUESTS = new ConcurrentHashMap<>();
 
     static final long START = System.currentTimeMillis();
 
-    static final String HOST =
-            System.getenv().getOrDefault("HOSTNAME", "localhost");
+    static final String HOST = System.getenv().getOrDefault("HOSTNAME", "localhost");
 
     static final Calculator CALC = new Calculator();
 
@@ -31,15 +30,13 @@ public class App {
         int port = Integer.parseInt(
                 System.getenv().getOrDefault("PORT", "8080"));
 
-        HttpServer server =
-                HttpServer.create(new InetSocketAddress(port), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 
         server.createContext("/", ex -> reply(
                 ex,
                 200,
                 "Hello from DevOps Demo v" + VERSION
-                        + " (host: " + HOST + ")\n"
-        ));
+                        + " - Gulshan Singh (host: " + HOST + ")\n"));
 
         server.createContext("/health",
                 ex -> reply(ex, 200, "OK\n"));
@@ -71,16 +68,14 @@ public class App {
             reply(
                     ex,
                     200,
-                    CALC.add(q.get("a"), q.get("b")) + "\n"
-            );
+                    CALC.add(q.get("a"), q.get("b")) + "\n");
 
         } catch (Exception e) {
 
             reply(
                     ex,
                     400,
-                    "Usage: /add?a=2&b=3\n"
-            );
+                    "Usage: /add?a=2&b=3\n");
         }
     }
 
@@ -98,13 +93,11 @@ public class App {
         sb.append("# HELP http_requests_total Total HTTP requests by path\n");
         sb.append("# TYPE http_requests_total counter\n");
 
-        REQUESTS.forEach((path, n) ->
-                sb.append("http_requests_total{path=\"")
-                        .append(path)
-                        .append("\"} ")
-                        .append(n.get())
-                        .append('\n')
-        );
+        REQUESTS.forEach((path, n) -> sb.append("http_requests_total{path=\"")
+                .append(path)
+                .append("\"} ")
+                .append(n.get())
+                .append('\n'));
 
         Runtime rt = Runtime.getRuntime();
 
@@ -136,25 +129,21 @@ public class App {
 
             REQUESTS.computeIfAbsent(
                     path,
-                    k -> new AtomicLong()
-            ).incrementAndGet();
+                    k -> new AtomicLong()).incrementAndGet();
 
             System.out.println(
                     ex.getRequestMethod()
                             + " "
                             + ex.getRequestURI()
                             + " -> "
-                            + status
-            );
+                            + status);
         }
 
-        byte[] bytes =
-                body.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
 
         ex.getResponseHeaders().set(
                 "Content-Type",
-                "text/plain; charset=utf-8"
-        );
+                "text/plain; charset=utf-8");
 
         ex.sendResponseHeaders(status, bytes.length);
 
