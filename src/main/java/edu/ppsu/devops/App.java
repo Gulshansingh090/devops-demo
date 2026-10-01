@@ -7,6 +7,8 @@ import com.sun.net.httpserver.HttpServer;
 
 // import main.java.edu.ppsu.devops.Calculator;
 
+// import main.java.edu.ppsu.devops.Calculator;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -37,7 +39,9 @@ public class App {
         server.createContext("/", ex -> reply(
                 ex,
                 200,
+
                 "Hello from Student A - DevOps Demo v" + VERSION + " (host: " + HOST + ")\n"));
+
 
         server.createContext("/health",
                 ex -> reply(ex, 200, "OK\n"));
