@@ -5,6 +5,10 @@ import com.sun.net.httpserver.HttpServer;
 
 
 
+// import main.java.edu.ppsu.devops.Calculator;
+
+// import main.java.edu.ppsu.devops.Calculator;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -35,13 +39,15 @@ public class App {
         server.createContext("/", ex -> reply(
                 ex,
                 200,
+
                 "Hello from Student A - DevOps Demo v" + VERSION + " (host: " + HOST + ")\n"));
+
 
         server.createContext("/health",
                 ex -> reply(ex, 200, "OK\n"));
 
         server.createContext("/add", App::add);
-
+        server.createContext("/subtract", App::subtract);
         server.createContext("/metrics", App::metrics);
 
         server.start();
@@ -75,6 +81,27 @@ public class App {
                     ex,
                     400,
                     "Usage: /add?a=2&b=3\n");
+        }
+    }
+
+    static void subtract(HttpExchange ex) throws IOException {
+        try {
+            Map<String, Integer> q = new ConcurrentHashMap<>();
+
+            String query = ex.getRequestURI().getQuery();
+
+            for (String p : query.split("&")) {
+                String[] kv = p.split("=");
+                q.put(kv[0], Integer.parseInt(kv[1]));
+            }
+            if (!q.containsKey("a") || !q.containsKey("b")) {
+                throw new IllegalArgumentException("Missing query parameters");
+            }
+
+            reply(ex, 200, CALC.subtract(q.get("a"), q.get("b")) + "\n");
+
+        } catch (Exception e) {
+            reply(ex, 400, "Usage: /subtract?a=5&b=3\n");
         }
     }
 
