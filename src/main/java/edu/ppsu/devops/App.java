@@ -5,6 +5,8 @@ import com.sun.net.httpserver.HttpServer;
 
 
 
+// import main.java.edu.ppsu.devops.Calculator;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
@@ -87,6 +89,9 @@ public class App {
             for (String p : query.split("&")) {
                 String[] kv = p.split("=");
                 q.put(kv[0], Integer.parseInt(kv[1]));
+            }
+            if (!q.containsKey("a") || !q.containsKey("b")) {
+                throw new IllegalArgumentException("Missing query parameters");
             }
 
             reply(ex, 200, CALC.subtract(q.get("a"), q.get("b")) + "\n");
