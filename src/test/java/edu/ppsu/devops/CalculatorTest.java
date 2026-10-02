@@ -11,7 +11,7 @@ class CalculatorTest {
 
     @Test
     void addsTwoNumbers() {
-        assertEquals(6, calc.add(2, 3));
+        assertEquals(5, calc.add(2, 3));
     }
 
     @Test
@@ -33,7 +33,6 @@ class CalculatorTest {
     void divideByZeroThrows() {
         assertThrows(
                 ArithmeticException.class,
-                () -> calc.divide(1, 0)
-        );
+                () -> calc.divide(1, 0));
     }
 }
