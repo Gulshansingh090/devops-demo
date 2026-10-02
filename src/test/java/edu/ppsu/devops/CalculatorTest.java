@@ -33,7 +33,6 @@ class CalculatorTest {
     void divideByZeroThrows() {
         assertThrows(
                 ArithmeticException.class,
-                () -> calc.divide(1, 0)
-        );
+                () -> calc.divide(1, 0));
     }
 }
