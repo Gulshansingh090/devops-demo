@@ -1,6 +1,13 @@
 pipeline {
 
     agent any
+parameters {
+        choice(
+            name: 'ENV',
+            choices: ['dev', 'qa'],
+            description: 'Target'
+        )
+    }
 
     tools {
         maven 'Maven3'
@@ -16,6 +23,11 @@ pipeline {
     }
 
     stages {
+stage('Show Environment') {
+        steps {
+            echo "Selected environment: ${params.ENV}"
+        }
+    }
 
         stage('Checkout') {
             steps {
